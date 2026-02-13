@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-Day Multi-Scenes Lifelong Vision-And-Language Navigation With Tucker-Adaption</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+
+        .author {
+            margin: 0 5px;
+        }
+
+        .author-superscript {
+            font-size: 0.8em;
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .affiliation {
+            margin: 5px 0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-arxiv {
+            background-color: #000000;
+            color: white;
+        }
+
+        .btn-video {
+            background-color: #000000;
+            color: white;
+        }
+
+        .btn-code {
+            background-color: #000000;
+            color: white;
+        }
+
+        .btn-data {
+            background-color: #000000;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .btn svg.btn-icon {
+            fill: currentColor;
+        }
+
+        .image-container {
+            display: flex;     
+            justify-content: center; 
+            align-items: center;    
+            margin: 20px 0;       
+        }
+
+        .image-container img {
+            max-width: 100%;  
+            height: auto;    
+            border-radius: 12px;
+        }
+
+        .author {
+            text-align: center; 
+            margin: 10px 0 20px 0;
+            font-size: 20px;
+        }
+
+        .author a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500; 
+            transition: color 0.3s;
+        }
+
+        .author a:hover {
+            color: #0c47a1;
+            text-decoration: underline;
+        }
+
+        .section {
+            margin: 50x 0;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .experiment-section{
+            background: #F8F9FE;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            flex: 1;
+            background-color: #333;
+            margin-left: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 20px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #667eea;
+            text-align: left;
+        }
+
+
+        .section-subtitle::after {
+            content: '';
+            position: relative;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #764ba2, #667eea);
+            border-radius: 2px;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;   
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .comparison-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .grid-wrapper {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .comparison-item {
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .comparison-item h3 {
+            margin: 0;
+            padding: 24px 28px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            background: #f8f9fa;
+            text-align: left;
+            line-height: 1.5;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .comparison-item h3 .highlight {
+            color: #d32f2f;
+            font-weight: 700;
+        }
+        
+        .video-card {
+            flex: 1 1 45%;
+            max-width: auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            max-height: auto;
+            position: relative;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; 
+        }
+
+        .video-meta {
+            text-align: center;
+            padding: 5px 0;
+        }
+
+        .video-card video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .video-title {
+            flex: 1;
+            padding: 5px;           
+            text-align: center;   
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            width: auto;      
+            min-height: auto;   
+            margin: auto auto; 
+        }
+
+        .video-instruction {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e88e5;  
+            margin: 8px 0;
+            line-height: 1.5;
+            font-weight: bold;
+            padding: 10px 10px;
+        }
+
+        .video-scene {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            font-weight: 500;
+            color: #8e24aa;  
+            margin: 6px 0;
+            font-weight: bold;
+        }
+
+        .video-environment {
+            font-family: 'Trebuchet MS', Helvetica, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin: 6px 0 12px;
+            font-weight: bold;
+
+        }
+
+        .tldr {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+        }
+
+        .tldr-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .tldr-content {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .subsection-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #34495e;
+            margin: 30px 0 20px 0;
+        }
+
+        .content-text {
+            padding: 2px;
+            font-size: 140%;
+            color: #4A4A4A;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .content-paper-text {
+            padding: 2px;
+            font-size: 120%;
+            color: #4A4A4A;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 90%;  
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+
+        .abstract-text{
+            font-size: 17px;             
+            line-height: 1.8;       
+            color: #333;       
+            text-align: justify;   
+        }
+        .abstract-content{
+            padding: 30px;               
+            margin: 40px auto;         
+            max-width: 900px;           
+            background-color: #f9f9f9;   
+            border-radius: 6px;        
+        }
+
+        .experiment-section {
+            background: #f8f9ff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section {
+                padding: 25px 20px 50px;
+                margin-top: 60px;
+                margin-bottom: 60px;
+            }
+        }
+    </style>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$','$$'], ['\\[','\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                packages: {'[+]': ['base', 'ams', 'noerrors', 'noundefined', 'boldsymbol']},
+                tags: 'ams',
+                formatError: (jax, err) => {
+                    console.error('MathJax error:', err);
+                    return jax.formatError(err);
+                }
+            },
+            options: {
+                skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                ready: () => {
+                    console.log('MathJax is loaded, but not yet initialized');
+                    MathJax.startup.defaultReady();
+                    console.log('MathJax is initialized, and the initial typeset is queued');
+                }
+            },
+            loader: {
+                load: ['input/tex', 'output/chtml', 'ui/menu']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"></script>
+    
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">All-Day Multi-Scenes Lifelong Vision-And-Language Navigation With Tucker-Adaption</h1>
+
+            <div class="author">
+                <a href="#">Anonymous</a>
+            </div>
+
+            <div class="buttons">
+                <a href="https://github.com/AlldayWalker/AlldayWalker" class="btn btn-code">
+                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    &nbsp&nbspCode
+                </a>
+            </div>
+        </header>
+
+        <div class="image-container">
+            <img src="static/F1.png" alt="Main picture">
+        </div>
+
+        <div class="content-text">
+            The proposed <strong>All-day Multi-scenes Lifelong Vision-and-Language Navigation</strong> (AML-
+            VLN) task and AlldayWalker with Tucker Adaptation (TuKA). The AML-VLN requires navigation
+            agents to continually learning across multiple scenes and multiple environments (low-light, over-
+            exposure, and scattering), thereby progressively consolidating navigation knowledge to evolve con-
+            tinually and achieve all-day multi-scenes navigation. TuKA decouples navigation knowledge and
+            represents it in a high-dimensional space to continuously learn specific and shared knowledge.
+        </div>
+        
+        <div class="abstract-content">
+            <h2 class="section-title">Abstract</h2>
+            <div class="abstract-text">
+                Deploying vision-and-language navigation (VLN) agents requires adaptation across diverse scenes and environments, but fine-tuning on a specific scenario often causes catastrophic forgetting in others, which severely limits flexible long-term deployment. We formalize this challenge as the all-day multi-scenes lifelong VLN (AML-VLN) problem. Existing parameter-efficient adapters (e.g., LoRA and its variants) are limited by their two-dimensional matrix form, which fails to capture the multi-hierarchical navigation knowledge spanning multiple scenes and environments. To address this, we propose Tucker Adaptation (TuKA), which represents the multi-hierarchical navigation knowledge as a high-order tensor and leverages Tucker decomposition to decouple the knowledge into shared subspaces and scenario-specific experts. We further introduce a decoupled knowledge incremental learning strategy to consolidate shared subspaces while constraining specific experts for decoupled lifelong learning. Building on TuKA, we also develop a VLN agent named AlldayWalker, which continually learns across multiple navigation scenarios, achieving all-day multi-scenes navigation. Extensive experiments show that AlldayWalker consistently outperforms state-of-the-art baselines.
+            </div>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">Method</h2>
+
+            <div class="image-container">
+                <img src="static/F2.jpg" alt="Main picture">
+            </div>
+
+            <p class="content-text">Illustration for comparison of existing LoRA and our TuKA architecture. Different from the LoRA or MoE-LoRA variants, which represent simple knowledge within a two-hierarchical matrix, TuKA decoupling represents the multi-hierarchical knowledge within a high-order tensor. </p>
+
+            <div class="image-container">
+                <img src="static/F3.png" alt="Main picture">
+            </div>
+
+            <div class="content-text">
+                llustration of the proposed <strong>Decoupled Knowledge Incremental Learning.</strong> Our TuKA per-
+                forms decoupled representation and incremental learning of knowledge in a high-dimensional space.
+            </div>
+
+            <div class="content-paper-text">
+                In order to learn the $t$-th navigation scenario task (with the $s$-th scene and the $e$-th environment) $T_{t} = \{S_{s},E_{e}\}$, 
+                we propose a new type of finetuning method named Tucker-Adaption (TuKA) to finetune the pretrained StreamVLN agent $\mathcal{F}_{\theta_{0}}$, 
+                in a higher-dimensional space, on the task-specific data $S_{t}=\{\mathcal{O}_{t},\mathcal{I}_{t}\}$, and then obtain an updated model $\mathcal{F}_{\theta'_{t}}$, 
+                where $\theta'_{t}=\theta_{0}+\Delta\theta_{t}$, $\Delta\theta_{t} = \{\Delta W^{l}_{t}\}^{L}_{l=1}$, 
+                and $\Delta W^{l}_{t}\in\mathbb{R}^{a_{l} \times b_{l}}$ is the updated weight in $l$-th layer of a total of $L$ transformer layers for task $T_{t}$. 
+                In our TuKA, we follow the Tensor Tucker Decomposition Approach (<a href="#" class="citation">TAKE</a>) to decouple the higher-order tensor knowledge for better multi-hierarchical navigation knowledge learning. 
+                
+                Specifically, a four-order tensor $\mathcal{X} \in \mathbb{R}^{a\times b\times M \times N}$ can be decomposed into:
+                
+                $$\mathcal{X} = \mathcal{G} \times_{1} U^{1} \times_{2} U^{2} \times_{3} U^{3} \times_{4} U^{4}, \tag{1}$$
+                
+                where $\times_{n}, n=1,2,3,4$ denotes the $n$-th modal product of the tensor and matrix. 
+                $\color{orange}{\mathcal{G}}\in \mathbb{R}^{r_{1}\times r_{2}\times r_{3}\times r_{4}}$ is core tensor, 
+                which contains interaction information between all patterns, and is used to learn the $\color{orange}{\text{navigation-shared knowledge}}$. 
+                    
+                The factor matrix $\color{orange}{U^{1}} \in \mathbb{R}^{a \times r_{1}}$ represents the transformation pattern of the feature from $r_{1}$ dimension to $a$, 
+                which can be regarded as a decoder; $\color{orange}{U^{2}} \in \mathbb{R}^{b \times r_{2}}$ represents the transformation pattern of the feature from $b$ dimension to $r_{2}$, 
+                which can be regarded as a encoder. The factor matrix $\color{purple}{U^{3}} \in \mathbb{R}^{M \times r_{3}}$ represents the $M$ group of scene experts, 
+                with each scene expert $\color{purple}{U^{3}[i,:]}$ is used to learn the $i$-th $\color{purple}{\text{specific scene knowledge}}$; $\color{cyan}{U^{4}} \in \mathbb{R}^{N \times r_{4}}$ represents $N$ group of environment experts, 
+                with each expert $\color{cyan}{U^{4}[j,:]}$ is used to learn the $j$-th $\color{cyan}{\text{specific environment knowledge}}$. 
+                
+                
+                Thus, for the $t$-th scenario with $s$-th scene and $e$-th environment adaptation, 
+                we extract the task-specific matrices $U^{3}[s,:]$ and $U^{4}[e,:]$ from the high-order tensor $\mathcal{X}$ to constitute weight $W_{t}$: 
+                
+                $$\Delta W_{t} = U^{1} \cdot(\mathcal{G} \times_{3} U^{3}[s,:] \times_{4} U^{4}[e,:]) \cdot (U^{2})^{T}. \tag{2}$$
+            </div>
+            
+        </section>
+
+        <section class="section experiment-section">
+            <h2 class="section-title">AlldayWalker Algorithms</h2>
+            <div style="height: 10%;width: auto;">
+                <div class="image-container">
+                    <img src="static/algorithm1.png" alt="Main picture" width="85%" height="auto">
+                </div>
+                <div class="image-container">
+                    <img src="static/algorithm2.png" alt="Main picture" width="85%" height="auto">
+                </div>
+            </div>
+            <p class="content-text">For clarity, a summary of the proposed AlldayWalker learning algorithm and the inference algorithm is provided above.</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Task Setting</h2>
+            <div class="image-container">
+                <img src="static/F6.png" alt="Main picture">
+            </div>
+            <p class="content-text">
+                Illustration of our all-day multi-scenes lifelong VLN Benchmark setting. The normal environment is marked in green color, low light is marked blue, scattering is marked yellow, and overexposure is marked in purple.
+            </p>
+        </section>
+
+        <section class="section experiment-section">
+            <h2 class="section-title">Real-World Experiments</h2>
+            <h2 class="section-subtitle">robotic navigation system introduction</h2>
+            <div class="image-container">
+                <img src="static/FFF.jpg" alt="Main picture">
+            </div>
+            <div class="content-text">
+                The platform consists of a DeepRobotDog Lite2 quadruped robot, a Hikvision DS-E12 camera, a portable WiFi communication module, and a remote computation server equipped with an NVIDIA A6000 GPU. During deployment, the Hikvision DS-E12 mounted on the robot captures RGB visual streams from the real environment, providing essential perception signals for navigation and scene understanding. These visual data are transmitted in real time to the remote server through the portable WiFi module. The server performs inference using the proposed AlldayWalker system running on the A6000 GPU, which processes both user instructions and visual observations to generate navigation actions. The resulting control signals are then sent back to the DeepRobotDog Lite2 via the wireless communication channel. The robot executes these actions in the physical environment, enabling closed-loop interaction between perception, language reasoning, and embodied control. This platform supports flexible and robust experimentation of all-day multi-scene lifelong navigation, bridging simulation and real-world deployment.  
+            </div>
+            <h2 class="section-subtitle">Vision-Language Navigation in Real World</h2>
+            
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: real-world 2</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Real/002.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction">
+                            <p style="color: red;font-weight: bold;font-size: 22px;">Task21</p>
+                            Walk straight ahead, bypass the pole on the left, and find the cup in the middle of the blue cone and in front of the yellow cone.
+                        </h3>
+                    </div>
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: real-world 1</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Real/001.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction">
+                            <p style="color: red;font-weight: bold;font-size: 22px;">Task22</p>
+                            Find the red cone-shaped barrel on the right, pass through from the left side, then pass to the right of the blue cone-shaped barrel in front, and finally find the red ball next to the cardboard box.
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: real-world 2</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Real/003.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction">
+                            <p style="color: red;font-weight: bold;font-size: 22px;">Task23</p>
+                            Walk straight, pass around the left side of the cardboard box, and find the Cube located in front of the blue cone.
+                        </h3>
+                    </div>
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: real-world 1</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Real/000.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction">
+                            <p style="color: red;font-weight: bold;font-size: 22px;">Task24</p>
+                            Pass through the left side of the blue cone-shaped barrel on the right, go around the left side of the cardboard box to the back of the box, and find the small red ball.
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Habitat Simulator Experiments</h2>
+            <h2 class="section-subtitle">Allday-Habitat simulation platform</h2>
+            <div class="image-container">
+                <img src="static/F4.png" alt="Main picture">
+            </div>
+            <div class="content-text">
+                We extended the Habitat embodied AI simulation platform to create diverse degraded environments for training and evaluating our AML-VLN task. We not only use normal environments, but also synthesize three types of challenging visual conditions:
+                <br><strong>Scattering environments:</strong>  Created using atmospheric scattering models that simulate how particles in the air (like fog, haze, or dust) affect image clarity by reducing visibility and adding atmospheric light.
+                <br><strong>Low-light environments: </strong> Generated using abnormal light imaging models that account for reduced illumination conditions, incorporating factors like camera response functions, system gain, exposure time, and various types of noise.
+                <br><strong>Overexposure environments: </strong> Synthesized using models that simulate excessive brightness conditions, where parts of the image become saturated due to too much light, resulting in loss of detail in bright regions.
+            </div>
+            <h2 class="section-subtitle">Visual Examples for Allday-Habitat</h2>
+            <div class="comparison-container">
+                <div class="grid-wrapper">
+                    <!-- Item 1 -->
+                    <div class="comparison-item">
+                        <h3 style="color: #d32f2f; text-align: center; font-weight: 700; font-size: 24px;">Habitat Natural Light<br>Scene Simulator</h3>
+                        <div class="image-container">
+                            <img src="static/normal.gif" alt="Natural lighting scene simulation">
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="comparison-item">
+                        <h3 style="color: #d32f2f; text-align: center; font-weight: 700; font-size: 24px;">Simulating Scattering Scenes Based on Atmospheric Scattering Model</h3>
+                        <div class="image-container">
+                            <img src="static/scatter.gif" alt="Scene scattering simulation">
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="comparison-item">
+                        <h3 style="color: #d32f2f; text-align: center; font-weight: 700; font-size: 24px;">Simulating Low-light Scenes Based on Camera Response Model</h3>
+                        <div class="image-container">
+                            <img src="static/lownight.gif" alt="Low light scene simulation">
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="comparison-item">
+                        <h3 style="color: #d32f2f; text-align: center; font-weight: 700; font-size: 24px;">Simulating Overexposure Scenes Based on Camera Response Model</h3>
+                        <div class="image-container">
+                            <img src="static/overexpose.gif" alt="Overexposure scene simulation">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-subtitle">Vision-Language Navigation in Habitat Simulator</h2>
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ac26ZMwG7aT</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task1.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <div class="video-title">
+                            <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task1</p>Go out of the room an take an immediate left. When you reach the hallway, go right. The second door on the left is a powder room, go in and wait there.</h3>
+                        </div>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: 5LpN3gDmAk7</h3>
+                            <h3 class="video-environment">Environment: Scattering</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task2.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <div class="video-title">
+                            <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task2</p>Go straight and into the bedroom to the left of the stairs. Stop in the large doorway to the right of the bed.</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: S9hNv5qa7GM</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task3.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task3</p>Exit the room using the door on the right. Turn left and go through the kitchen. Go past the table and chairs and wait near the stairs on the right.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: mJXqzFtmKg4</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task4.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task4</p>Exit study and turn left. Stop at double doors and tall planter.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: mJXqzFtmKg4</h3>
+                            <h3 class="video-environment">Environment: Overexposure</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task5.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task5</p>Enter the room go out the door on the right turn left and wait right at the living room entrance.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ULsKaCPVFJR</h3>
+                            <h3 class="video-environment">Environment: Overexposure</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task6.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task6</p>Walk past the mirror on your right, and continue to walk down the hallway. Walk into the room directly right of the doorway in front of you, and stop once you walk in.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: 5LpN3gDmAk7</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task7.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task7</p>Enter the house and walk around the chair to the open door on your right. Walk through the open door just to the left of the stairs. Walk to the end of the hall and turn left. Enter the bedroom and wait by the fireplace.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ac26ZMwG7aT</h3>
+                            <h3 class="video-environment">Environment: Overexposure</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task8.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task8</p>Leave the room, then take the left door in the next room.  Turn left and go all the way down the hallway into the walk-in closet.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ULsKaCPVFJR</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task9.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task9</p>Walk straight through the doorway and take a right. Walk straight through the bathroom and stop passed the sink.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ac26ZMwG7aT</h3>
+                            <h3 class="video-environment">Environment: Scattering</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task10.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task10</p>Walk into the office and turn left. Walk into the bedroom and turn left. Walk down the hall and turn left. Walk into the bathroom and stop.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ULsKaCPVFJR</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task11.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task11</p>Turn around and go down the long hallway. Turn the right corner, and turn left into the bathroom.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ULsKaCPVFJR</h3>
+                            <h3 class="video-environment">Environment: Scattering</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task12.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task12</p>Walk out of the bathroom and take a left and walk straight, down the hall, into the bedroom. In the bedroom stop next to the photo of  sailboat on your right.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: 5LpN3gDmAk7</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task13.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task13</p>Walk outside and pass the outdoor furniture.  Make a left before you reach the table, and enter the inside room on the left.  Wait here.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: mJXqzFtmKg4</h3>
+                            <h3 class="video-environment">Environment: Normal</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task14.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task14</p>Walk toward the fireplace.  Exit the room and turn left.  Stop in front of the double doors and tall potted plant.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: S9hNv5qa7GM</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task15.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task15</p>Walk straight down the hall and into the room straight ahead. Wait near the entrance.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: S9hNv5qa7GM</h3>
+                            <h3 class="video-environment">Environment: Scattering</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task16.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task16</p>Walk into the hardwood floored room, heading towards the fireplace at the opposite end. Once you're at the fireplace, turn right and go into the room ahead of you.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: mJXqzFtmKg4</h3>
+                            <h3 class="video-environment">Environment: Overexposure</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task17.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task17</p>Enter the room go out the door on the right turn left and wait right at the living room entrance.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: ac26ZMwG7aT</h3>
+                            <h3 class="video-environment">Environment: Low-light</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task18.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task18</p>Exit the room with the TV, into the room with a wooden desk with two office chairs. Exit that room through the double doors, into the curving hall. Turn into the first room on the right and stop in the doorway.</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-text">
+                <div class="video-container">
+                    <!-- left video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: 5LpN3gDmAk7</h3>
+                            <h3 class="video-environment">Environment: Overexposure</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task19.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task19</p>Turn right and exit into the bedroom. Turn left and walk to the wall and then turn left. Walk to the end of that area and turn right out the last door. Once out the door walk across the small room and enter the door to the far left. Stop once you enter the bedroom.</h3>
+                    </div>
+
+                    <!-- right video -->
+                    <div class="video-card">
+                        <div class="video-meta">
+                            <h3 class="video-scene">Scene: mJXqzFtmKg4</h3>
+                            <h3 class="video-environment">Environment: Scattering</h3>
+                        </div>
+                        <div class="video-wrapper">
+                            <video controls>
+                                <source src="static/video-Simulator/Task20.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-overlay">Speed 1X</div>
+                        </div>
+                        <h3 class="video-instruction"><p style="color: red;font-weight: bold;font-size: 22px;">Task20</p>go straight down hall to archway on your left turn left and walk straight to first doorway on your right, stop in doorway.</h3>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="section experiment-section">
+            <h2 class="section-title">Comparison Experiment Results</h2>
+            <div class="image-container">
+                <img src="static/result1.png" alt="Main picture">
+            </div>
+            <div class="image-container">
+                <img src="static/result2.png" alt="Main picture">
+            </div>
+            <p class="content-text">
+                Test results ( (a) <strong>SPL ↑</strong>, 
+                (b) <strong>F-SPL ↓</strong>, 
+                (c) <strong>OSR ↑</strong>, 
+                (d) <strong>F-OSR ↓</strong>) 
+                of comparison experiment under the AML-VLN settings.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Extension Experiments</h2>
+            <div class="image-container">
+                <img src="static/result3.png" alt="Main picture">
+            </div>
+            <div class="image-container">
+                <img src="static/CDS.jpg" alt="Main picture">
+            </div>
+            <p class="content-text">Illustration of the fifth-order tensor TuKA architecture. </p>
+        </section>
+    </div>
+</body>
+</html>

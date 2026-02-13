@@ -1,0 +1,66 @@
+# @package _global_
+
+defaults:
+  - /habitat: habitat_config_base
+  - /habitat/task: vln_r2r
+  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: rgbd_agent
+  - /habitat/dataset/vln: mp3d_r2r
+  - /habitat/task/lab_sensors:
+    - gps_sensor
+    - compass_sensor
+  - _self_
+
+habitat:
+  environment:
+    max_episode_steps: 500
+    iterator_options:
+      max_scene_repeat_steps: 50000
+      shuffle: False
+      
+  simulator:
+    agents:
+      main_agent:
+        sim_sensors:
+          rgb_sensor:
+            width: 640
+            height: 480
+            hfov: 79
+            noise_model: "LowLightNoiseModel"
+            noise_model_kwargs:
+              brightness_factor: 0.15    
+              noise_level: "medium"    
+              exposure: 0.15 
+              gain: 8.0
+              shot_noise_factor: 0.4
+              read_noise_sigma: 3.0
+              denoise_strength: 0.75
+              preserve_details: 0.7
+              gamma: 2.2                        
+              contrast_factor: 0.75              
+              saturation_factor: 0.50  
+              color_temperature: null
+              scene_type: "night" 
+              enable_noise: true  
+              enable_blur: false
+              vignette_strength: 0.4 
+              depth_aware: false    
+    forward_step_size: 0.25
+    turn_angle: 15
+    habitat_sim_v0:
+      gpu_device_id: 0
+    
+  task:
+    measurements:
+      distance_to_goal:
+        type: DistanceToGoal
+        distance_to: POINT
+      success:
+        type: Success
+        success_distance: 3.0
+      spl:
+        type: SPL   
+  dataset:
+    type: R2RVLN-v1
+    split: val_seen
+    scenes_dir: data/scene_datasets/
+    data_path: data/datasets/r2r/{split}/{split}.json.gz
