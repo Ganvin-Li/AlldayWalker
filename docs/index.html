@@ -472,6 +472,20 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"></script>
+    <script>
+        function copyBibtex(btn) {
+            const text = document.getElementById('bibtex-content').innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#2e7d32';
+                setTimeout(function () {
+                    btn.textContent = original;
+                    btn.style.background = '#000';
+                }, 1500);
+            });
+        }
+    </script>
     
 
 </head>
@@ -1144,14 +1158,17 @@
             <p class="content-text">Illustration of the fifth-order tensor TuKA architecture. </p>
         </section>
 
-        <section class="section">
+        <section class="section experiment-section">
             <h2 class="section-title">BibTeX</h2>
-            <pre style="background:#f5f5f5;border-radius:8px;padding:20px;overflow-x:auto;font-size:0.95rem;line-height:1.5;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;color:#333;white-space:pre;">@article{wang2026all,
+            <div style="position:relative;">
+                <button onclick="copyBibtex(this)" style="position:absolute;top:12px;right:12px;padding:6px 14px;border:none;border-radius:6px;background:#000;color:#fff;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">Copy</button>
+                <pre id="bibtex-content" style="background:#f5f5f5;border-radius:8px;padding:20px;overflow-x:auto;font-size:0.95rem;line-height:1.5;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;color:#333;white-space:pre;">@article{wang2026all,
   title={All-day multi-scenes lifelong vision-and-language navigation with tucker adaptation},
   author={Wang, Xudong and Li, Gan and Liu, Zhiyu and Wang, Yao and Liu, Lianqing and Han, Zhi},
   journal={arXiv preprint arXiv:2603.14276},
   year={2026}
 }</pre>
+            </div>
         </section>
     </div>
 </body>
